@@ -1,0 +1,7 @@
+pyrogram
+tgcrypto
+pytgcalls
+Flask
+gunicorn
+pymongo
+
