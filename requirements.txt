@@ -1,6 +1,6 @@
 pyrogram==2.0.106
 tgcrypto
-https://github.com/pytgcalls/pytgcalls/archive/refs/tags/3.0.0.dev24.tar.gz
+pytgcalls==3.0.0.dev24
 Flask
 gunicorn
 pymongo[srv]
