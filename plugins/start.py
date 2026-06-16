@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import config
+from utils.logger import send_log
 
 @Client.on_message(filters.command("start"))
 async def start(client, message):
@@ -17,3 +18,4 @@ async def start(client, message):
         f"Made with ❤️ by {config.OWNER}\nSupport: [Click Here]({config.SUPPORT})",
         reply_markup=InlineKeyboardMarkup(buttons)
     )
+    await send_log(client, f"🚀 Start command used by {message.from_user.mention} in {message.chat.title}")
