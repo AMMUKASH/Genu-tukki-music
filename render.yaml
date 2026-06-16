@@ -1,0 +1,21 @@
+services:
+  - type: worker
+    name: tukki-music-worker
+    env: docker
+    plan: starter
+    autoDeploy: true
+    envVars:
+      - key: API_ID
+        value: 38138069
+      - key: API_HASH
+        value: 2ed313ebcc45cbcf65d1fc736ec71681
+      - key: BOT_TOKEN
+        value: 8997247669:AAGCgGGp24DWjRd-7FQ60mat_gQwe2Bs-9Y
+      - key: MONGO_URL
+        value: mongodb+srv://misssqn_db_user:Nova01@cluster0.6xxsrwq.mongodb.net/?retryWrites=true&w=majority
+      - key: LOG_GROUP
+        value: -1003947649552
+      - key: OWNER
+        value: @CoderNova
+      - key: SUPPORT
+        value: https://t.me/Genu_Bot_Support/119
