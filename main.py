@@ -21,7 +21,7 @@ OWNER_USERNAME = "CoderNova"
 BOT_USERNAME = "Tukki_Music_Bot"
 START_VIDEO_URL = "https://files.catbox.moe/pnaxj0.mp4"
 
-# Render Environment Variable Mapping for Safety
+# Render Environment Variable
 SESSION_STRING = os.environ.get("SESSION", "AQAAAA...") 
 
 # ==========================================
@@ -66,7 +66,7 @@ def init_keep_alive():
 def get_start_keyboard():
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("➕ ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ ➕", url=f"https://t.me/{BOT_USERNAME}?startgroup=true")
+            InlineKeyboardButton("➕ ᴀheader ᴍᴇ ʙᴀʙʏ ➕", url=f"https://t.me/{BOT_USERNAME}?startgroup=true")
         ],
         [
             InlineKeyboardButton("👨‍💻 ᴏᴡɴᴇʀ", url=f"https://t.me/{OWNER_USERNAME}"),
@@ -81,7 +81,7 @@ def get_start_keyboard():
 def get_help_keyboard():
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🛡️ ᴀᴅᴍɪɴ", callback_data="cmd_admin"),
+            InlineKeyboardButton("🛡️ ᴀheaderɴ", callback_data="cmd_admin"),
             InlineKeyboardButton("🔐 ᴀᴜᴛʜ", callback_data="cmd_auth"),
             InlineKeyboardButton("🎛️ ᴄ-ᴘʟᴀʏ", callback_data="cmd_cplay")
         ],
@@ -111,13 +111,11 @@ async def start_handler(_, message: Message):
     user_name = message.from_user.first_name
     is_new_user = False
     
-    # Save user data if started in private chat
     if users_col is not None and message.chat.type == message.chat.type.PRIVATE:
         if not users_col.find_one({"user_id": message.from_user.id}):
             users_col.insert_one({"user_id": message.from_user.id, "username": message.from_user.username})
             is_new_user = True
 
-    # Save chat data if started in group
     if message.chat.type != message.chat.type.PRIVATE and groups_col is not None:
         if not groups_col.find_one({"chat_id": message.chat.id}):
             groups_col.insert_one({"chat_id": message.chat.id, "title": message.chat.title})
@@ -158,7 +156,7 @@ async def start_handler(_, message: Message):
         )
 
 # ==========================================
-# 🎵 7. MUSIC CONTROL CHANNELS (PRIVATE + PUBLIC)
+# 🎵 7. MUSIC CONTROL CHANNELS (WITH GC ROUTING BUTTON)
 # ==========================================
 @bot.on_message(filters.command(["play", "vplay"]))
 async def play_audio(_, message: Message):
@@ -166,30 +164,36 @@ async def play_audio(_, message: Message):
         return await message.reply_text("❌ **ᴜsᴇ:** `/play [sᴏɴɢ ɴᴀᴍᴇ ᴏʀ ʟɪɴᴋ]`")
     
     query = " ".join(message.command[1:])
-    await message.reply_text("🎵 **sᴛʀᴇᴀᴍ ɪs sᴛᴀʀᴛɪɴɢ...**")
+    
+    # Inline routing keyboard to redirect everyone to the GC Support Chat
+    gc_button = InlineKeyboardMarkup([
+        [InlineKeyboardButton("💬 ᴊᴏɪɴ ᴏᴜʀ ᴍᴀɪɴ ɢᴄ / sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ 💬", url=SUPPORT_CHAT)]
+    ])
+    
+    await message.reply_text(
+        "🎵 **sᴛʀᴇᴀᴍ ɪs sᴛᴀʀᴛɪɴɢ... sᴀʙ ʟᴏɢ ᴍᴀɪɴ ɢᴄ ᴍᴇ ᴊᴀᴏ!**",
+        reply_markup=gc_button
+    )
     
     chat_id = message.chat.id
     chat_title = message.chat.title if message.chat.title else "ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ"
     
-    # Save chat data to DB if missing
     if message.chat.type != message.chat.type.PRIVATE and groups_col is not None:
         if not groups_col.find_one({"chat_id": chat_id}):
             groups_col.insert_one({"chat_id": chat_id, "title": chat_title})
 
     try:
-        # PyTgCalls trigger streaming structure
         await call_py.join_group_call(
             chat_id,
             AudioPcmInputFile("input.raw") 
         )
         
-        # Real-time logger
         play_log = (
             "🎵 **#ᴘʟᴀʏ_ʀᴇǫᴜᴇsᴛ sᴛʀᴇᴀᴍ**\n\n"
-            f"👥 **ᴄʜᴀᴛ/ɢʀᴏᴜᴘ:** {chat_title}\n"
+            f"👥 **Base/ᴄʜᴀᴛ:** {chat_title}\n"
             f"🆔 **ᴄʜᴀᴛ ɪᴅ:** `{chat_id}`\n"
             f"👤 **ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ:** {message.from_user.mention}\n"
-            f"🔍 **ǫᴜᴇʀʏ:** `{query}`"
+            f"🔍 **ǫᴜᴇʀ¥:** `{query}`"
         )
         await bot.send_message(LOG_GROUP, play_log)
         
@@ -201,7 +205,6 @@ async def music_controls_handler(_, message: Message):
     command = message.command[0].lower()
     chat_title = message.chat.title if message.chat.title else "ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ"
     
-    # Ye saare control actions ab private aur public dono chats me seamlessly triggers honge
     try:
         if command == "pause":
             await call_py.pause_stream(message.chat.id)
@@ -213,10 +216,9 @@ async def music_controls_handler(_, message: Message):
             await call_py.leave_group_call(message.chat.id)
             await message.reply_text("⏹️ **sᴛʀᴇᴀᴍ sᴛᴏᴘᴘᴇᴅ / sᴋɪᴘᴘᴇᴅ.**")
         else:
-            await message.reply_text(f"✨ **ᴄᴏᴍᴍᴀɴᴅ** `/{command}` **ᴇxᴇᴄᴜᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.**")
+            await message.reply_text(f"✨ **<b>ᴄᴏᴍᴍᴀɴᴅ</b>** `/{command}` **ᴇxᴇᴄᴜᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.**")
             
-        # Logging Actions to Sudo Log Channel
-        action_log = f"⚙️ **#ᴄᴏᴍᴍᴀɴᴅ_ʟᴏɢ:** `/{command}` executed in **{chat_title}** (`{message.chat.id}`) by {message.from_user.mention}"
+        action_log = f"⚙️ **#<b>ᴄᴏᴍᴍᴀɴᴅ_ʟᴏɢ</b>:** `/{command}` executed in **{chat_title}** (`{message.chat.id}`) by {message.from_user.mention}"
         await bot.send_message(LOG_GROUP, action_log)
         
     except Exception as e:
@@ -233,10 +235,10 @@ async def bot_added_log(_, message: Message):
                 groups_col.insert_one({"chat_id": message.chat.id, "title": message.chat.title})
         
         add_log = (
-            "📥 **#ᴀheader #ᴊᴏɪɴ_ɢʀᴏᴜᴘ**\n\n"
+            "📥 **#ᴀheader #<b>ᴊᴏɪɴ_ɢʀᴏᴜᴘ</b>**\n\n"
             f"👥 **ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {message.chat.title}\n"
             f"🆔 **ɢʀᴏᴜᴘ ɪᴅ:** `{message.chat.id}`\n"
-            f"👤 **ᴀᴅᴅᴇᴅ ʙʏ:** {message.from_user.mention if message.from_user else 'ᴜɴᴋɴᴏᴡɴ'}"
+            f"👤 **ᴀheader ʙ¥:** {message.from_user.mention if message.from_user else 'ᴜɴᴋɴᴏᴡɴ'}"
         )
         try:
             await bot.send_message(LOG_GROUP, add_log)
@@ -253,7 +255,7 @@ async def bot_kicked_log(_, message: Message):
             "📤 **#ʟᴇғᴛ_ɢʀᴏᴜᴘ #ᴋɪᴄᴋᴇᴅ**\n\n"
             f"👥 **ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {message.chat.title}\n"
             f"🆔 **ɢʀᴏᴜᴘ ɪᴅ:** `{message.chat.id}`\n"
-            f"👤 **ʀᴇᴍᴏᴠᴇᴅ ʙʏ:** {message.from_user.mention if message.from_user else 'ᴜɴᴋɴᴏᴡɴ'}"
+            f"👤 **ʀᴇᴍᴏᴠᴇᴅ ʙ¥:** {message.from_user.mention if message.from_user else 'ᴜɴᴋɴᴏᴡɴ'}"
         )
         try:
             await bot.send_message(LOG_GROUP, left_log)
@@ -270,11 +272,11 @@ async def callback_handler(_, query: CallbackQuery):
     
     if data == "back_start":
         caption = (
-            f"✨ **ʜᴇʏ** {user_name}!\n"
+            f"✨ **ʜᴇ¥** {user_name}!\n"
             f"✨ **ɪ ᴀᴍ** **ᴛᴜᴋᴋɪ ᴍᴜsɪᴄ ʙᴏᴛ 💖🕊️**\n\n"
             "🏆 **ʙᴇsᴛ ǫᴜᴀʟɪᴛỹ ғᴇᴀᴛᴜʀᴇs ɪɴsɪᴅᴇ**\n"
-            "🛠️ **ᴍᴀᴅᴇ ʙʏ...** [ᴄᴏᴅᴇʀɴᴏᴠᴀ](https://t.me/CoderNova)\n\n"
-            "ᴄʜᴏᴏsᴇ ᴛʜᴇ ᴄᴀᴛᴇɢᴏʀʏ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴɴᴀ ɢᴇᴛ ʜᴇʟᴘ.\n"
+            "🛠️ **ᴍᴀᴅᴇ ʙ¥...** [ᴄᴏᴅᴇʀɴᴏᴠᴀ](https://t.me/CoderNova)\n\n"
+            "ᴄʜᴏᴏsᴇ ᴛʜᴇ ᴄᴀᴛᴇɢᴏʀỹ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀheader ɢᴇᴛ ʜᴇʟᴘ.\n"
             "ᴀsᴋ ʏᴏᴜʀ ᴅᴏᴜʙᴛs ᴀᴛ [sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ](" + SUPPORT_CHAT + ")\n\n"
             "ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs ᴄᴀɴ ʙᴇ ᴜsᴇᴅ ᴡɪᴛʜ : `/`"
         )
@@ -287,47 +289,47 @@ async def callback_handler(_, query: CallbackQuery):
     elif data == "guide_menu":
         guide_text = (
             "📖 **ɢᴜɪᴅᴇ - ʜᴏᴡ ᴛᴏ ᴜsᴇ ᴛᴜᴋᴋɪ ᴍᴜsɪᴄ**\n\n"
-            "𝟷. ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴡɪᴛʜ ᴀᴅᴍɪɴ ᴘᴇʀᴍɪssɪᴏɴs.\n"
-            "𝟸. sᴛᴀʀᴛ ᴀ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ɪɴsɪᴅᴇ ʏᴏᴜʀ ɢʀᴏᴜᴘ.\n"
-            "𝟹. ᴜsᴇ `/play [sᴏɴɢ ɴᴀᴍᴇ]` ᴛᴏ sᴛʀᴇᴀᴍ ʜɪɢʜ-ǫᴜᴀʟɪᴛʏ ᴀᴜᴅɪᴏ.\n"
-            "𝟺. ᴜsᴇ `/skip` ᴏʀ `/pause` ᴛᴏ ᴄᴏɴᴛʀᴏʟ ᴍᴇᴅɪᴀ sᴛʀᴇᴀᴍs sᴇᴀᴍʟᴇssʟʏ."
+            "𝟷. ᴀheader ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴡɪᴛʜ ᴀheaderɴ ᴘᴇʀᴍɪssɪᴏɴs.\n"
+            "𝟸. sᴛᴀheader ᴀ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ɪɴsɪᴅᴇ ʏᴏᴜʀ ɢʀᴏᴜᴘ.\n"
+            "𝟹. ᴜsᴇ `/play [sᴏɴɢ ɴᴀᴍᴇ]` ᴛᴏ sᴛʀᴇᴀᴍ ʜɪɢʜ-ǫᴜᴀʟɪᴛ¥ ᴀᴜᴅɪᴏ.\n"
+            "𝟺. ᴜsᴇ `/skip` ᴏʀ `/pause` ᴛᴏ ᴄᴏheaderᴏʟ ᴍᴇᴅɪᴀ sᴛʀᴇᴀᴍs sᴇᴀᴍʟᴇssʟỹ."
         )
         await query.message.edit_caption(caption=guide_text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 ʙᴀᴄᴋ", callback_data="back_start")]]))
 
     elif data == "cmd_admin":
-        txt = "🛡️ **ᴀheaderɴ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/pause` - ᴘᴀᴜsᴇ ᴄᴜʀʀᴇɴᴛ sᴛʀᴇᴀᴍ\n• `/resume` - ʀᴇsᴜᴍᴇ ᴘᴀᴜsᴇᴅ sᴛʀᴇᴀᴍ\n• `/skip` - sᴋɪᴘ sᴏɴɢ\n• `/stop` - sᴛᴏᴘ sᴛʀᴇᴀᴍ"
+        txt = "🛡️ **ᴀheaderɴ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/pause` - ᴘᴀᴜsᴇ ᴄᴜʀʀᴇheader sᴛʀᴇᴀᴍ\n• `/resume` - ʀᴇsᴜᴍᴇ ᴘᴀᴜsᴇᴅ sᴛʀᴇᴀᴍ\n• `/skip` - sᴋɪᴘ sᴏɴɢ\n• `/stop` - sᴛᴏᴘ sᴛʀᴇᴀᴍ"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_auth":
-        txt = "🔐 **ᴀᴜᴛʜ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/auth` - ᴀᴜᴛʜᴏʀɪᴢᴇ ᴜsᴇʀ\n• `/unauth` - ʀᴇᴍᴏᴠᴇ ᴀᴜᴛʜᴏʀɪᴢᴀᴛɪᴏɴ\n• `/authusers` - ʟɪsᴛ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴜsᴇʀs"
+        txt = "🔐 **ᴀᴜᴛʜ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/auth` - ᴀᴜᴛʜᴏʀɪᴢᴇ ᴜsᴇʀ\n• `/unauth` - ʀᴇᴍᴏᴠᴇ ᴀᴜᴛʜᴏʀɪᴢᴀheaderɴ\n• `/authusers` - ʟɪsᴛ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴜsᴇʀs"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_cplay":
-        txt = "🎛️ **ᴄ-ᴘʟᴀʏ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/cplay` - ᴄʜᴀɴɴᴇʟ ᴘʟᴀʏ sᴛʀᴇᴀᴍ\n• `/cplay_list` - sʜᴏᴡ sᴛʀᴇᴀᴍ ǫᴜᴇᴜᴇ ɪɴ ᴄʜᴀɴɴᴇʟ"
+        txt = "🎛️ **ᴄ-ᴘʟᴀ¥ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/cplay` - ᴄʜᴀheader ᴘʟᴀ¥ sᴛʀᴇᴀᴍ\n• `/cplay_list` - sʜᴏᴡ sᴛʀᴇᴀᴍ ǫheader ɪheader ᴄʜᴀheader"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_loop":
-        txt = "🔄 **ʟᴏᴏᴘ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/loop [𝟷-𝟻]` - ʀᴇᴘᴇᴀᴛ ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ sᴏɴɢ\n• `/loop disable` - ᴛᴜʀɴ ᴏғғ ʟᴏᴏᴘ ᴍᴏᴅᴇ"
+        txt = "🔄 **ʟᴏᴏᴘ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/loop [𝟷-𝟻]` - ʀᴇᴘᴇᴀᴛ ᴛʜᴇ ᴄᴜʀʀᴇheader sᴏɴɢ\n• `/loop disable` - ᴛᴜheader ᴏғғ ʟᴏᴏᴘ ᴍᴏᴅᴇ"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_play":
-        txt = "▶️ **ᴘʟᴀʏ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/play [sᴏɴɢ ɴᴀᴍᴇ]` - sᴛʀᴇᴀᴍ ᴀᴜᴅɪᴏ\n• `/vplay [ᴠɪᴅᴇᴏ ɴᴀᴍᴇ]` - sᴛʀᴇᴀᴍ ᴠɪᴅᴇᴏ\n• `/playlist` - sʜᴏᴡ ᴄᴜʀʀᴇɴᴛ ǫᴜᴇᴜᴇ"
+        txt = "▶️ **ᴘʟᴀ¥ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/play [sᴏɴɢ ɴᴀᴍᴇ]` - sᴛʀᴇᴀᴍ ᴀᴜᴅɪᴏ\n• `/vplay [ᴠɪᴅᴇᴏ ɴᴀᴍᴇ]` - sᴛʀᴇᴀᴍ ᴠɪᴅᴇᴏ\n• `/playlist` - sʜᴏᴡ ᴄᴜʀʀᴇheader ǫheader"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_shuffle":
-        txt = "🔀 **sʜᴜғғʟᴇ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/shuffle` - sʜᴜғғʟᴇ ǫᴜᴇᴜᴇ ɪᴛᴇᴍs\n• `/queue` - sʜᴏᴡ sʜᴜғғʟᴇᴅ ᴏʀᴅᴇʀ"
+        txt = "🔀 **sʜᴜғғʟᴇ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/shuffle` - sʜᴜғғʟᴇ ǫheader ɪᴛᴇᴍs\n• `/queue` - sʜᴏᴡ sʜᴜғғʟᴇᴅ ᴏheader"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_seek":
-        txt = "⏩ **sᴇᴇᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/seek [ᴅᴜʀᴀᴛɪᴏɴ]` - sᴇᴇᴋ sᴛʀᴇᴀᴍ ғᴏʀᴡᴀʀᴅ\n• `/seekback [ᴅᴜʀᴀᴛɪᴏɴ]` - sᴇᴇᴋ ʙᴀᴄᴋᴡᴀʀᴅ"
+        txt = "⏩ **sᴇᴇᴋ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/seek [ᴅheaderɪᴏheader]` - sᴇᴇᴋ sᴛʀᴇᴀᴍ ғᴏʀᴡᴀheader\n• `/seekback [ᴅheaderɪᴏheader]` - sᴇᴇᴋ ʙᴀᴄᴋᴡᴀheader"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_speed":
-        txt = "⚡ **sᴘᴇᴇᴅ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/speed [𝟶.𝟻x-𝟸.𝟶x]` - sᴇᴛ ᴀᴜᴅɪᴏ ᴘʟᴀʏʙᴀᴄᴋ sᴘᴇᴇᴅ"
+        txt = "⚡ **sᴘᴇᴇᴅ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/speed [𝟶.𝟻x-𝟸.𝟶x]` - sᴇᴛ ᴀᴜᴅɪᴏ ᴘʟᴀ¥ʙᴀᴄᴋ sᴘᴇᴇᴅ"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_extra":
-        txt = "🔮 **ᴇxᴛʀᴀ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/lyrics [ɴᴀᴍᴇ]` - sᴇᴀʀᴄʜ sᴏɴɢ ʟʏʀɪᴄs\n• `/song [ɴᴀᴍᴇ]` - ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴜᴅɪᴏ ᴅɪʀᴇᴄᴛʟʏ"
+        txt = "🔮 **ᴇxheader ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/lyrics [ɴᴀᴍᴇ]` - sᴇᴀheader sᴏɴɢ ʟỹʀɪᴄs\n• `/song [ɴᴀᴍᴇ]` - ᴅᴏᴡheaderᴅ ᴀᴜᴅɪᴏ ᴅɪʀᴇᴄheader"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
 
 # ==========================================
@@ -336,9 +338,9 @@ async def callback_handler(_, query: CallbackQuery):
 @bot.on_message(filters.command("broadcast") & filters.user(OWNER_USERNAME))
 async def simple_broadcast(_, message: Message):
     if not message.reply_to_message:
-        return await message.reply_text("❌ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ.")
+        return await message.reply_text("❌ ʀᴇᴘʟ¥ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙheadersᴛ.")
     
-    await message.reply_text("⚡ **sᴛᴀʀᴛɪɴɢ ʙʀᴏᴀᴅᴄᴀsᴛ ᴛᴏ ᴜsᴇʀs & ɢʀᴏᴜᴘs...**")
+    await message.reply_text("⚡ **sᴛᴀheaderɢ ʙheadersᴛ ᴛᴏ ᴜsᴇʀs & ɢʀᴏᴜᴘs...**")
     
     if users_col is not None:
         for u in users_col.find():
@@ -356,14 +358,14 @@ async def simple_broadcast(_, message: Message):
             except Exception:
                 pass
     
-    await message.reply_text("✅ **ʙʀᴏᴀᴅᴄᴀsᴛ sᴜᴄᴄᴇssғᴜʟʟʏ ᴄᴏᴍᴘʟᴇᴛᴇcompleted!**")
+    await message.reply_text("✅ **ʙheadersᴛ sᴜᴄᴄᴇssғᴜʟʟ¥ ᴄᴏᴍᴘʟᴇᴛᴇᴅ!**")
 
 @bot.on_message(filters.command("broadcast_all") & filters.user(OWNER_USERNAME))
 async def global_broadcast_all(_, message: Message):
     if not message.reply_to_message:
-        return await message.reply_text("❌ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ᴀʟʟ.")
+        return await message.reply_text("❌ ʀᴇᴘʟ¥ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙheadersᴛ ᴀʟʟ.")
         
-    await message.reply_text("🔥 **sᴛᴀʀᴛɪɴɢ ᴍᴀssɪᴠᴇ ɢʟᴏʙᴀʟ ʙʀᴏᴀᴅᴄᴀsᴛ (ᴡɪᴛʜ ᴘɪɴ + ᴀssɪsᴛᴀɴᴛ)...**")
+    await message.reply_text("🔥 **sᴛᴀheaderɢ ᴍᴀssɪᴠᴇ ɢʟᴏʙᴀʟ ʙheadersᴛ (ᴡɪᴛʜ ᴘɪheader + ᴀssɪsheader)...**")
     
     if users_col is not None:
         for u in users_col.find():
@@ -383,12 +385,37 @@ async def global_broadcast_all(_, message: Message):
             except Exception:
                 pass
                 
-    await message.reply_text("✅ **ɢʟᴏʙᴀʟ ᴍᴀss ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴏᴍᴘʟᴇᴛᴇ!**")
+    await message.reply_text("✅ **ɢʟᴏʙᴀʟ ᴍᴀss ʙheadersᴛ ᴄᴏᴍᴘʟᴇᴛᴇ!**")
 
 # ==========================================
-# 🚀 11. SYSTEM INITIATION TRIGGER
+# 🚀 11. BOOTSTRAP & LOG GROUP NOTIFIER
 # ==========================================
+async def start_services():
+    init_keep_alive()
+    await bot.start()
+    await assistant.start()
+    
+    # Fetch Assistant dynamic client profile info
+    assistant_me = await assistant.get_me()
+    assistant_name = assistant_me.first_name
+    assistant_id = assistant_me.id
+    assistant_username = f"@{assistant_me.username}" if assistant_me.username else "ɴᴏ_ᴜsᴇʀɴᴀᴍᴇ"
+    
+    # Send custom system active message directly into Sudo log channel
+    system_start_text = (
+        "⚙️ **ᴛᴜᴋᴋɪ ᴍᴜsɪᴄ sʏsᴛᴇᴍ ᴀᴄᴛɪᴠᴀᴛᴇᴅ**\n\n"
+        "✅ **ʙᴏᴛ sᴛᴀheaderᴅ sᴜᴄᴄᴇssғᴜʟʟ¥ ᴏheader ʀᴇheader!**\n"
+        f"🤖 **ᴀssɪsheader ɴᴀᴍᴇ:** {assistant_name}\n"
+        f"🆔 **ᴀssɪsheader ɪᴅ:** `{assistant_id}`\n"
+        f"🔗 **ᴀssɪsheader ᴜsᴇheader:** {assistant_username}\n\n"
+        "✨ *sʏsᴛᴇᴍ ɪs 𝟸𝟺/𝟽 ʟɪᴠᴇ ᴀheader ʀheaderɪheader...*"
+    )
+    try:
+        await bot.send_message(LOG_GROUP, system_start_text)
+    except Exception as e:
+        print(f"Failed to send startup log: {e}")
+        
+    await asyncio.Event().wait()
+
 if __name__ == "__main__":
-    init_keep_alive()  # Live port integration for Render hosting platform
-    bot.run()
-
+    asyncio.get_event_loop().run_until_complete(start_services())
