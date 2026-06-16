@@ -1,7 +1,6 @@
 pyrogram==2.0.106
 tgcrypto
-ntgcalls==3.0.0.dev6
-pytgcalls==3.0.0.dev24
+pytgcalls==2.4.0
 Flask
 gunicorn
 pymongo[srv]
