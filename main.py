@@ -21,7 +21,7 @@ OWNER_USERNAME = "CoderNova"
 BOT_USERNAME = "Tukki_Music_Bot"
 START_VIDEO_URL = "https://files.catbox.moe/pnaxj0.mp4"
 
-# Render Environment Variable
+# Render Environment Variable for Assistant String Session
 SESSION_STRING = os.environ.get("SESSION", "AQAAAA...") 
 
 # ==========================================
@@ -58,15 +58,16 @@ def run_web_server():
 
 def init_keep_alive():
     t = Thread(target=run_web_server)
+    t.daemon = True
     t.start()
 
 # ==========================================
-# 🎛️ 5. INLINE KEYBOARDS STRUCTS (SMALL CAPS)
+# 🎛️ 5. INLINE KEYBOARDS STRUCTS
 # ==========================================
 def get_start_keyboard():
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("➕ ᴀheader ᴍᴇ ʙᴀʙʏ ➕", url=f"https://t.me/{BOT_USERNAME}?startgroup=true")
+            InlineKeyboardButton("➕ ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ ➕", url=f"https://t.me/{BOT_USERNAME}?startgroup=true")
         ],
         [
             InlineKeyboardButton("👨‍💻 ᴏᴡɴᴇʀ", url=f"https://t.me/{OWNER_USERNAME}"),
@@ -81,7 +82,7 @@ def get_start_keyboard():
 def get_help_keyboard():
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🛡️ ᴀheaderɴ", callback_data="cmd_admin"),
+            InlineKeyboardButton("🛡️ ᴀᴅᴍɪɴ", callback_data="cmd_admin"),
             InlineKeyboardButton("🔐 ᴀᴜᴛʜ", callback_data="cmd_auth"),
             InlineKeyboardButton("🎛️ ᴄ-ᴘʟᴀʏ", callback_data="cmd_cplay")
         ],
@@ -104,7 +105,7 @@ def get_back_keyboard():
     return InlineKeyboardMarkup([[InlineKeyboardButton("🔙 ʙᴀᴄᴋ", callback_data="help_menu")]])
 
 # ==========================================
-# 📬 6. START COMMAND & DATA SYNC (WITH LOGS)
+# 📬 6. START COMMAND & DATA SYNC
 # ==========================================
 @bot.on_message(filters.command("start"))
 async def start_handler(_, message: Message):
@@ -156,7 +157,7 @@ async def start_handler(_, message: Message):
         )
 
 # ==========================================
-# 🎵 7. MUSIC CONTROL CHANNELS (WITH GC ROUTING BUTTON)
+# 🎵 7. MUSIC CONTROL CHANNELS & ROUTING
 # ==========================================
 @bot.on_message(filters.command(["play", "vplay"]))
 async def play_audio(_, message: Message):
@@ -165,7 +166,7 @@ async def play_audio(_, message: Message):
     
     query = " ".join(message.command[1:])
     
-    # Inline routing keyboard to redirect everyone to the GC Support Chat
+    # Global Chat Routing Button Layout
     gc_button = InlineKeyboardMarkup([
         [InlineKeyboardButton("💬 ᴊᴏɪɴ ᴏᴜʀ ᴍᴀɪɴ ɢᴄ / sᴜᴘᴘᴏʀᴛ ᴄʜᴀᴛ 💬", url=SUPPORT_CHAT)]
     ])
@@ -190,10 +191,10 @@ async def play_audio(_, message: Message):
         
         play_log = (
             "🎵 **#ᴘʟᴀʏ_ʀᴇǫᴜᴇsᴛ sᴛʀᴇᴀᴍ**\n\n"
-            f"👥 **Base/ᴄʜᴀᴛ:** {chat_title}\n"
+            f"👥 **ᴄʜᴀᴛ:** {chat_title}\n"
             f"🆔 **ᴄʜᴀᴛ ɪᴅ:** `{chat_id}`\n"
             f"👤 **ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ:** {message.from_user.mention}\n"
-            f"🔍 **ǫᴜᴇʀ¥:** `{query}`"
+            f"🔍 **ǫᴜᴇʀʏ:** `{query}`"
         )
         await bot.send_message(LOG_GROUP, play_log)
         
@@ -216,16 +217,16 @@ async def music_controls_handler(_, message: Message):
             await call_py.leave_group_call(message.chat.id)
             await message.reply_text("⏹️ **sᴛʀᴇᴀᴍ sᴛᴏᴘᴘᴇᴅ / sᴋɪᴘᴘᴇᴅ.**")
         else:
-            await message.reply_text(f"✨ **<b>ᴄᴏᴍᴍᴀɴᴅ</b>** `/{command}` **ᴇxᴇᴄᴜᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.**")
+            await message.reply_text(f"✨ **ᴄᴏᴍᴍᴀɴᴅ** `/{command}` **ᴇxᴇᴄᴜᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.**")
             
-        action_log = f"⚙️ **#<b>ᴄᴏᴍᴍᴀɴᴅ_ʟᴏɢ</b>:** `/{command}` executed in **{chat_title}** (`{message.chat.id}`) by {message.from_user.mention}"
+        action_log = f"⚙️ **#ᴄᴏᴍᴍᴀɴᴅ_ʟᴏɢ:** `/{command}` executed in **{chat_title}** (`{message.chat.id}`) by {message.from_user.mention}"
         await bot.send_message(LOG_GROUP, action_log)
         
     except Exception as e:
         await message.reply_text(f"ℹ️ **ᴍᴜsɪᴄ sᴛʀᴇᴀᴍ ɴᴏᴛ ᴀᴄᴛɪᴠᴇ ʀɪɢʜᴛ ɴᴏᴡ:** {e}")
 
 # ==========================================
-# 📥 8. BOT METRICS ROUTING (NEW CHATS JOIN/LEFT LOGS)
+# 📥 8. BOT METRICS ROUTING (JOIN/LEFT LOGS)
 # ==========================================
 @bot.on_message(filters.new_chat_members)
 async def bot_added_log(_, message: Message):
@@ -235,7 +236,7 @@ async def bot_added_log(_, message: Message):
                 groups_col.insert_one({"chat_id": message.chat.id, "title": message.chat.title})
         
         add_log = (
-            "📥 **#ᴀheader #<b>ᴊᴏɪɴ_ɢʀᴏᴜᴘ</b>**\n\n"
+            "📥 **#ᴀheader #ᴊᴏɪɴ_ɢʀᴏᴜᴘ**\n\n"
             f"👥 **ɢʀᴏᴜᴘ ɴᴀᴍᴇ:** {message.chat.title}\n"
             f"🆔 **ɢʀᴏᴜᴘ ɪᴅ:** `{message.chat.id}`\n"
             f"👤 **ᴀheader ʙ¥:** {message.from_user.mention if message.from_user else 'ᴜɴᴋɴᴏᴡɴ'}"
@@ -305,7 +306,7 @@ async def callback_handler(_, query: CallbackQuery):
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_cplay":
-        txt = "🎛️ **ᴄ-ᴘʟᴀ¥ ᴄᴏᴍᴍᴀɴᴅs:**\n\n• `/cplay` - ᴄʜᴀheader ᴘʟᴀ¥ sᴛʀᴇᴀᴍ\n• `/cplay_list` - sʜᴏᴡ sᴛʀᴇᴀᴍ ǫheader ɪheader ᴄʜᴀheader"
+        txt = "🎛️ **...**\n\n• `/cplay` - ᴄʜᴀheader ᴘʟᴀ¥ sᴛʀᴇᴀᴍ\n• `/cplay_list` - sʜᴏᴡ sᴛʀᴇᴀᴍ ǫheader ɪheader ᴄʜᴀheader"
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
         
     elif data == "cmd_loop":
@@ -333,7 +334,7 @@ async def callback_handler(_, query: CallbackQuery):
         await query.message.edit_caption(caption=txt, reply_markup=get_back_keyboard())
 
 # ==========================================
-# 📢 10. PREMIUM MASSS BROADCASTS (SUDO ONLY)
+# 📢 10. PREMIUM MASS BROADCASTS (SUDO ONLY)
 # ==========================================
 @bot.on_message(filters.command("broadcast") & filters.user(OWNER_USERNAME))
 async def simple_broadcast(_, message: Message):
@@ -360,62 +361,41 @@ async def simple_broadcast(_, message: Message):
     
     await message.reply_text("✅ **ʙheadersᴛ sᴜᴄᴄᴇssғᴜʟʟ¥ ᴄᴏᴍᴘʟᴇᴛᴇᴅ!**")
 
-@bot.on_message(filters.command("broadcast_all") & filters.user(OWNER_USERNAME))
-async def global_broadcast_all(_, message: Message):
-    if not message.reply_to_message:
-        return await message.reply_text("❌ ʀᴇᴘʟ¥ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙheadersᴛ ᴀʟʟ.")
-        
-    await message.reply_text("🔥 **sᴛᴀheaderɢ ᴍᴀssɪᴠᴇ ɢʟᴏʙᴀʟ ʙheadersᴛ (ᴡɪᴛʜ ᴘɪheader + ᴀssɪsheader)...**")
-    
-    if users_col is not None:
-        for u in users_col.find():
-            try:
-                m = await message.reply_to_message.copy(u["user_id"])
-                await m.pin(disable_notification=False)
-                await asyncio.sleep(0.3)
-            except Exception:
-                pass
-                
-    if groups_col is not None:
-        for g in groups_col.find():
-            try:
-                m = await message.reply_to_message.copy(g["chat_id"])
-                await m.pin(disable_notification=False)
-                await asyncio.sleep(0.3)
-            except Exception:
-                pass
-                
-    await message.reply_text("✅ **ɢʟᴏʙᴀʟ ᴍᴀss ʙheadersᴛ ᴄᴏᴍᴘʟᴇᴛᴇ!**")
-
 # ==========================================
-# 🚀 11. BOOTSTRAP & LOG GROUP NOTIFIER
+# 🚀 11. BOOTSTRAP & DYNAMIC EVENT LOOP
 # ==========================================
-async def start_services():
+if __name__ == "__main__":
     init_keep_alive()
-    await bot.start()
-    await assistant.start()
     
-    # Fetch Assistant dynamic client profile info
-    assistant_me = await assistant.get_me()
-    assistant_name = assistant_me.first_name
-    assistant_id = assistant_me.id
-    assistant_username = f"@{assistant_me.username}" if assistant_me.username else "ɴᴏ_ᴜsᴇʀɴᴀᴍᴇ"
-    
-    # Send custom system active message directly into Sudo log channel
-    system_start_text = (
-        "⚙️ **ᴛᴜᴋᴋɪ ᴍᴜsɪᴄ sʏsᴛᴇᴍ ᴀᴄᴛɪᴠᴀᴛᴇᴅ**\n\n"
-        "✅ **ʙᴏᴛ sᴛᴀheaderᴅ sᴜᴄᴄᴇssғᴜʟʟ¥ ᴏheader ʀᴇheader!**\n"
-        f"🤖 **ᴀssɪsheader ɴᴀᴍᴇ:** {assistant_name}\n"
-        f"🆔 **ᴀssɪsheader ɪᴅ:** `{assistant_id}`\n"
-        f"🔗 **ᴀssɪsheader ᴜsᴇheader:** {assistant_username}\n\n"
-        "✨ *sʏsᴛᴇᴍ ɪs 𝟸𝟺/𝟽 ʟɪᴠᴇ ᴀheader ʀheaderɪheader...*"
-    )
+    # Render Python 3.11+ asyncio engine fix
     try:
-        await bot.send_message(LOG_GROUP, system_start_text)
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        
+    # Start both client frameworks synchronously inside loop
+    loop.run_until_complete(bot.start())
+    loop.run_until_complete(assistant.start())
+    
+    # Trigger Assistant log active event 
+    try:
+        assistant_me = loop.run_until_complete(assistant.get_me())
+        assistant_name = assistant_me.first_name
+        assistant_id = assistant_me.id
+        assistant_username = f"@{assistant_me.username}" if assistant_me.username else "ɴᴏ_ᴜsᴇʀɴᴀᴍᴇ"
+        
+        system_start_text = (
+            "⚙️ **ᴛᴜᴋᴋɪ ᴍᴜsɪᴄ sʏsᴛᴇᴍ ᴀᴄᴛɪᴠᴀᴛᴇᴅ**\n\n"
+            "✅ **ʙᴏᴛ sᴛᴀʀᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ ᴏɴ ʀᴇɴᴅᴇʀ!**\n"
+            f"🤖 **ᴀssɪsᴛᴀɴᴛ ɴᴀᴍᴇ:** {assistant_name}\n"
+            f"🆔 **ᴀssɪsᴛᴀɴᴛ ɪᴅ:** `{assistant_id}`\n"
+            f"🔗 **ᴀssɪsᴛᴀɴᴛ ᴜsᴇʀɴᴀᴍᴇ:** {assistant_username}\n\n"
+            "✨ *sʏsᴛᴇᴍ ɪs 𝟸𝟺/𝟽 ʟɪᴠᴇ ᴀɴᴅ ʀᴜɴɴɪɴɢ...*"
+        )
+        loop.run_until_complete(bot.send_message(LOG_GROUP, system_start_text))
     except Exception as e:
         print(f"Failed to send startup log: {e}")
-        
-    await asyncio.Event().wait()
 
-if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(start_services())
+    # Keep services running indefinitely 
+    loop.run_forever()
