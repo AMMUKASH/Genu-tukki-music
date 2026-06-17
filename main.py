@@ -1,8 +1,8 @@
 import os
 import logging
-from hydrogram import Client, filters
+from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types import MediaStream
+from pytgcalls.types import InputStream, AudioPiped
 
 # Config from environment
 API_ID = int(os.getenv("API_ID"))
@@ -15,7 +15,7 @@ LOG_GROUP = int(os.getenv("LOG_GROUP"))
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
-# Hydrogram client setup
+# Pyrogram client setup
 app = Client(
     "TukkiMusicBot",
     api_id=API_ID,
@@ -24,8 +24,8 @@ app = Client(
     session_string=STRING_SESSION
 )
 
-# Latest pytgcalls syntax: Client ko properly bind karna
-call = PyTgCalls(app, cache_duration=10)
+# Stable PyTgCalls client binding
+call = PyTgCalls(app)
 
 @app.on_message(filters.command("start"))
 async def start(_, message):
@@ -39,9 +39,12 @@ async def play(_, message):
     song = message.text.split(None, 1)[1]
     await message.reply_text(f"▶️ Playing: {song}")
     
+    # Stable v2 syntax using InputStream
     await call.join_group_call(
         message.chat.id,
-        MediaStream(song)
+        InputStream(
+            AudioPiped(song)
+        )
     )
 
 @app.on_message(filters.command("stop"))
@@ -51,7 +54,6 @@ async def stop(_, message):
 
 if __name__ == "__main__":
     LOGGER.info("Starting Tukki Music Bot...")
-    # Naye pytgcalls core ke mutabiq dono ko sahi order me run karna
     app.start()
     call.start()
     LOGGER.info("Bot is running successfully!")
