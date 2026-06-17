@@ -2,7 +2,7 @@ import os
 import logging
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types import InputStream, AudioPiped
+from pytgcalls.types import AudioPiped  # pytgcalls v2.1.0 me sirf AudioPiped use hoga
 
 # Config from environment
 API_ID = int(os.getenv("API_ID"))
@@ -35,14 +35,14 @@ async def start(_, message):
 async def play(_, message):
     if len(message.command) < 2:
         return await message.reply_text("❌ Please provide a song name or link.")
+    
     song = message.text.split(None, 1)[1]
     await message.reply_text(f"▶️ Playing: {song}")
-    # Example: play audio from yt-dlp
+    
+    # pytgcalls v2.1.0 ke liye correct syntax:
     await call.join_group_call(
         message.chat.id,
-        InputStream(
-            AudioPiped(song)  # yt-dlp link or file path
-        )
+        AudioPiped(song)
     )
 
 @app.on_message(filters.command("stop"))
