@@ -1,9 +1,5 @@
 pyrogram==2.0.106
-tgcrypto
-pytgcalls==3.0.0.dev24
+pytgcalls==3.0.0.dev22
 ffmpeg-python
 yt-dlp
 motor
-pymongo[srv]
-Flask
-gunicorn
