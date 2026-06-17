@@ -2,7 +2,7 @@ import os
 import logging
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types import AudioPiped  # pytgcalls v2.1.0 me sirf AudioPiped use hoga
+from pytgcalls.types import AudioPiped  # v3 dev24 ke liye direct import
 
 # Config from environment
 API_ID = int(os.getenv("API_ID"))
@@ -39,7 +39,7 @@ async def play(_, message):
     song = message.text.split(None, 1)[1]
     await message.reply_text(f"▶️ Playing: {song}")
     
-    # pytgcalls v2.1.0 ke liye correct syntax:
+    # pytgcalls v3 syntax (No InputStream needed)
     await call.join_group_call(
         message.chat.id,
         AudioPiped(song)
