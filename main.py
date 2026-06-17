@@ -1,20 +1,15 @@
 import os
 import logging
-import asyncio
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types import MediaStream  # v3 dev24 ke liye direct import
+from pytgcalls.types import MediaStream
 
-# Config from environment (safe fallback)
-API_ID = os.getenv("API_ID")
-if not API_ID:
-    raise ValueError("API_ID environment variable not set!")
-API_ID = int(API_ID)
-
-API_HASH = os.getenv("API_HASH") or ""
-BOT_TOKEN = os.getenv("BOT_TOKEN") or ""
-STRING_SESSION = os.getenv("STRING_SESSION") or ""
-LOG_GROUP = int(os.getenv("LOG_GROUP") or 0)
+# Config from environment
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+STRING_SESSION = os.getenv("STRING_SESSION")
+LOG_GROUP = int(os.getenv("LOG_GROUP"))
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +39,6 @@ async def play(_, message):
     song = message.text.split(None, 1)[1]
     await message.reply_text(f"▶️ Playing: {song}")
     
-    # Latest pytgcalls syntax: MediaStream use karke path/link pass karna
     await call.join_group_call(
         message.chat.id,
         MediaStream(song)
@@ -57,19 +51,7 @@ async def stop(_, message):
 
 if __name__ == "__main__":
     LOGGER.info("Starting Tukki Music Bot...")
-
-    # Asyncio event loop fix for Python 3.14
-    try:
-        loop = asyncio.get_event_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-
-    # Run bot inside event loop
-    async def run():
-        await app.start()
-        await call.start()
-        LOGGER.info("Bot is running...")
-        await app.idle()
-
-    loop.run_until_complete(run())
+    app.start()
+    call.start()
+    LOGGER.info("Bot is running...")
+    app.idle()
