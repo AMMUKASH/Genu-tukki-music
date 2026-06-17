@@ -1,6 +1,6 @@
 import os
 import logging
-from hydrogram import Client, filters  # Poori tarah hydrogram use ho raha hai
+from hydrogram import Client, filters
 from pytgcalls import PyTgCalls
 from pytgcalls.types import MediaStream
 
@@ -24,8 +24,8 @@ app = Client(
     session_string=STRING_SESSION
 )
 
-# PyTgCalls client
-call = PyTgCalls(app)
+# Latest pytgcalls syntax: Client ko properly bind karna
+call = PyTgCalls(app, cache_duration=10)
 
 @app.on_message(filters.command("start"))
 async def start(_, message):
@@ -51,7 +51,8 @@ async def stop(_, message):
 
 if __name__ == "__main__":
     LOGGER.info("Starting Tukki Music Bot...")
+    # Naye pytgcalls core ke mutabiq dono ko sahi order me run karna
     app.start()
     call.start()
-    LOGGER.info("Bot is running...")
+    LOGGER.info("Bot is running successfully!")
     app.idle()
