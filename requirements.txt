@@ -1,5 +1,5 @@
-pyrogram==2.0.106
-pytgcalls==3.0.0.dev22
+Pyrogram==2.0.106
+pytgcalls==2.4.0
 ffmpeg-python
 yt-dlp
 motor
