@@ -2,7 +2,7 @@ import os
 import logging
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types import AudioPiped
+from pytgcalls.types import MediaStream  # AudioPiped ki jagah MediaStream use hoga
 
 # Config from environment
 API_ID = int(os.getenv("API_ID"))
@@ -39,9 +39,10 @@ async def play(_, message):
     song = message.text.split(None, 1)[1]
     await message.reply_text(f"▶️ Playing: {song}")
     
+    # Latest pytgcalls syntax: MediaStream use karke path pass karna
     await call.join_group_call(
         message.chat.id,
-        AudioPiped(song)
+        MediaStream(song)
     )
 
 @app.on_message(filters.command("stop"))
