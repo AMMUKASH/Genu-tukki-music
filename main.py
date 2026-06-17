@@ -1,6 +1,5 @@
 import os
 import logging
-import asyncio
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
 from pytgcalls.types import AudioPiped
@@ -50,17 +49,9 @@ async def stop(_, message):
     await call.leave_group_call(message.chat.id)
     await message.reply_text("⏹️ Stopped playback.")
 
-# Python 3.14+ loop issue fix karne ke liye main async function
-async def main():
-    LOGGER.info("Starting Tukki Music Bot...")
-    await app.start()
-    await call.start()
-    LOGGER.info("Bot is running...")
-    await asyncio.Event().wait()  # Bot ko running state me rakhne ke liye
-
 if __name__ == "__main__":
-    # Naye Python versions ke liye event loop manually initialize karna
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        LOGGER.info("Bot stopped.")
+    LOGGER.info("Starting Tukki Music Bot...")
+    app.start()
+    call.start()
+    LOGGER.info("Bot is running...")
+    app.idle()
