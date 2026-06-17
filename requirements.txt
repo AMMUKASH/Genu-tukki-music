@@ -1,5 +1,6 @@
-hydrogram
-git+https://github.com/pytgcalls/pytgcalls.git@master
+pyrogram==2.0.106
+tgcalls==2.4.0
+pytgcalls==2.4.0
 ffmpeg-python
 yt-dlp
 motor
