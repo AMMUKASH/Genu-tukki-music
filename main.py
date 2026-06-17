@@ -3,7 +3,7 @@ import logging
 import asyncio
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types import AudioPiped  # v3 dev24 ke liye direct import
+from pytgcalls.types import AudioPiped
 
 # Config from environment
 API_ID = int(os.getenv("API_ID"))
@@ -40,7 +40,6 @@ async def play(_, message):
     song = message.text.split(None, 1)[1]
     await message.reply_text(f"▶️ Playing: {song}")
     
-    # pytgcalls v3 syntax (No InputStream needed)
     await call.join_group_call(
         message.chat.id,
         AudioPiped(song)
@@ -51,17 +50,17 @@ async def stop(_, message):
     await call.leave_group_call(message.chat.id)
     await message.reply_text("⏹️ Stopped playback.")
 
-if __name__ == "__main__":
+# Python 3.14+ loop issue fix karne ke liye main async function
+async def main():
     LOGGER.info("Starting Tukki Music Bot...")
-
-    # Asyncio event loop fix for Python 3.14
-    try:
-        loop = asyncio.get_event_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-
-    app.start()
-    call.start()
+    await app.start()
+    await call.start()
     LOGGER.info("Bot is running...")
-    app.idle()
+    await asyncio.Event().wait()  # Bot ko running state me rakhne ke liye
+
+if __name__ == "__main__":
+    # Naye Python versions ke liye event loop manually initialize karna
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        LOGGER.info("Bot stopped.")
