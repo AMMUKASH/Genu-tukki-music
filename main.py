@@ -1,6 +1,6 @@
 import os
 import logging
-from hydrogram import Client, filters  # pyrogram ki jagah hydrogram use kiya hai
+from hydrogram import Client, filters  # Poori tarah hydrogram use ho raha hai
 from pytgcalls import PyTgCalls
 from pytgcalls.types import MediaStream
 
@@ -15,7 +15,7 @@ LOG_GROUP = int(os.getenv("LOG_GROUP"))
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
-# Hydrogram client (same parameters as pyrogram)
+# Hydrogram client setup
 app = Client(
     "TukkiMusicBot",
     api_id=API_ID,
