@@ -65,7 +65,11 @@ if __name__ == "__main__":
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
-    app.start()
-    call.start()
-    LOGGER.info("Bot is running...")
-    app.idle()
+    # Run bot inside event loop
+    async def run():
+        await app.start()
+        await call.start()
+        LOGGER.info("Bot is running...")
+        await app.idle()
+
+    loop.run_until_complete(run())
