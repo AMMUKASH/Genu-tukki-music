@@ -1,10 +1,10 @@
 import os
 import logging
-from hydrogram import Client, filters
+from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types import MediaStream
+from pytgcalls.types import AudioPiped
 
-# Config from environment
+# Config from environment vars
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -15,7 +15,7 @@ LOG_GROUP = int(os.getenv("LOG_GROUP"))
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
-# Hydrogram client setup
+# Standard Pyrogram Client
 app = Client(
     "TukkiMusicBot",
     api_id=API_ID,
@@ -24,12 +24,12 @@ app = Client(
     session_string=STRING_SESSION
 )
 
-# Binding client properly to avoid InvalidMTProtoClient error
+# Seamlessly binding the stable client wrapper
 call = PyTgCalls(app)
 
 @app.on_message(filters.command("start"))
 async def start(_, message):
-    await message.reply_text("🎶 Tukki Music Bot is alive!")
+    await message.reply_text("🎶 Tukki Music Bot is alive and stable!")
 
 @app.on_message(filters.command("play"))
 async def play(_, message):
@@ -39,9 +39,10 @@ async def play(_, message):
     song = message.text.split(None, 1)[1]
     await message.reply_text(f"▶️ Playing: {song}")
     
+    # Stable v2 PyTgCalls syntax
     await call.join_group_call(
         message.chat.id,
-        MediaStream(song)
+        AudioPiped(song)
     )
 
 @app.on_message(filters.command("stop"))
@@ -51,7 +52,7 @@ async def stop(_, message):
 
 if __name__ == "__main__":
     LOGGER.info("Starting Tukki Music Bot...")
-    app.start()
+    # call.start() internally automatically runs client safely inside its loop
     call.start()
-    LOGGER.info("Bot is running successfully!")
+    LOGGER.info("Bot is running seamlessly!")
     app.idle()
