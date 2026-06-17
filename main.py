@@ -1,5 +1,6 @@
 import os
 import logging
+import asyncio
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
 from pytgcalls.types import AudioPiped  # v3 dev24 ke liye direct import
@@ -52,6 +53,14 @@ async def stop(_, message):
 
 if __name__ == "__main__":
     LOGGER.info("Starting Tukki Music Bot...")
+
+    # Asyncio event loop fix for Python 3.14
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
     app.start()
     call.start()
     LOGGER.info("Bot is running...")
