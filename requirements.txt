@@ -1,5 +1,5 @@
 Pyrogram==2.0.106
-git+https://github.com/pytgcalls/pytgcalls.git@main
+git+https://github.com/pytgcalls/pytgcalls.git@master
 ffmpeg-python
 yt-dlp
 motor
