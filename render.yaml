@@ -18,4 +18,4 @@ services:
       - key: OWNER
         value: @CoderNova
       - key: SUPPORT
-        value: https://t.me/Genu_Bot_Support/119
+        value: https://t.me/NovaBot_Support
