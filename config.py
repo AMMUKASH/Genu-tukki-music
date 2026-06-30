@@ -14,7 +14,7 @@ LOG_GROUP = int(os.getenv("LOG_GROUP", "-1003947649552"))
 
 # Owner and support info
 OWNER = os.getenv("OWNER", "@CoderNova")
-SUPPORT = os.getenv("SUPPORT", "https://t.me/Genu_Bot_Support/119")
+SUPPORT = os.getenv("SUPPORT", "https://t.me/NovaBot_Support")
 
 # Bot username
 BOT_USERNAME = os.getenv("BOT_USERNAME", "@Tukki_Music_Bot")
