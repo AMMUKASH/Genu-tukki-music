@@ -3,7 +3,7 @@ import os
 # Telegram API credentials
 API_ID = int(os.getenv("API_ID", "38138069"))
 API_HASH = os.getenv("API_HASH", "2ed313ebcc45cbcf65d1fc736ec71681")
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8997247669:AAGCgGGp24DWjRd-7FQ60mat_gQwe2Bs-9Y")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8997247669:AAEhcPwhbtRwR3SxvVKsZU3bSnnS3RPO5xg")
 STRING_SESSION = os.getenv("STRING_SESSION", "AQJF8NUAgBfq_JynQDTlV8Bw7YUi_5Xr8Y_0JWiGElK7XrAUyeBr9Iu87Heq8j3EZ42zuFbbJgv1RmgkNt0CErphSozbaL0sG8TYIm9RqPPYTRR3LmeNGkGkb")
 
 # MongoDB connection
