@@ -214,7 +214,7 @@ async def ping_cmd(c, m):
         )
     except Exception: pass
 
-# OPTIMIZED ULTRA-FAST TAGALL WITH FLOOD MANAGEMENT
+# --- BLAZING FAST TAGALL WITH FLOOD ESCAPE ---
 async def tagall_cmd(c, m):
     uid = c.me.id
     active_tasks[uid] = True
@@ -229,13 +229,13 @@ async def tagall_cmd(c, m):
             try:
                 mention = f"[{member.user.first_name or 'User'}](tg://user?id={member.user.id})"
                 await c.send_message(m.chat.id, f"{input_text}\n\n{mention}")
-                await asyncio.sleep(0.9)  # Ultra-fast optimal latency
+                await asyncio.sleep(0.15)  # Extreme Fast Speed
             except errors.FloodWait as e:
                 await asyncio.sleep(e.value + 1)
             except Exception: pass
     except Exception: pass
 
-# OPTIMIZED ULTRA-FAST ONETAG WITH FLOOD MANAGEMENT
+# --- BLAZING FAST ONETAG WITH FLOOD ESCAPE ---
 async def onetag_cmd(c, m):
     uid = c.me.id
     active_tasks[uid] = True 
@@ -250,13 +250,13 @@ async def onetag_cmd(c, m):
                 mention = f"[{member.user.first_name or 'User'}](tg://user?id={member.user.id})"
                 msg = random.choice(DAILY_CHATS).format(mention=mention)
                 await c.send_message(m.chat.id, msg)
-                await asyncio.sleep(1.2)  # Optimized safe latency
+                await asyncio.sleep(0.2)  # Extreme Fast Speed
             except errors.FloodWait as e:
                 await asyncio.sleep(e.value + 1)
             except Exception: pass
     except Exception: pass
 
-# OPTIMIZED ULTRA-FAST RAID WITH FLOOD MANAGEMENT
+# --- BLAZING FAST RAID WITH FLOOD ESCAPE ---
 async def raid_cmd(c, m):
     uid = c.me.id
     args = m.text.split()
@@ -279,7 +279,7 @@ async def raid_cmd(c, m):
         try:
             msg = random.choice(ABUSE_RAIDS)
             await c.send_message(chat_id=m.chat.id, text=msg, reply_to_message_id=reply_to_id)
-            await asyncio.sleep(0.8)  # Blazing fast raid delay
+            await asyncio.sleep(0.1)  # Maximum Possible Speed
         except errors.FloodWait as e:
             await asyncio.sleep(e.value + 1)
         except Exception: pass
@@ -290,7 +290,7 @@ async def stop_cmd(c, m):
     try: await m.edit_text("🚫 **『 ᴀʟʟ ᴘʀᴏᴄᴇssᴇs sᴛᴏᴘᴘᴇᴅ ʙʏ ᴄᴏᴅᴇʀɴᴏᴠᴀ 』**")
     except Exception: pass
 
-# ASSISTANT USERBOT IN-LINE GUIDE HELP COMMAND
+# --- ASSISTANT ID HELP MENU COMMAND ---
 async def assistant_help_cmd(c, m):
     help_guide = (
         f"⚙️ **『 ᴄᴏᴅᴇʀɴᴏᴠᴀ ᴜsᴇʀʙᴏᴛ ᴍᴀsᴛᴇʀ ɢᴜɪᴅᴇ 』** ⚙️\n\n"
@@ -313,12 +313,12 @@ async def assistant_help_cmd(c, m):
         try: await m.edit_text(help_guide)
         except Exception: pass
 
-# --- FIXED AUTOMATED EVENT PROCESSING FUNCTIONS ---
+# --- AUTOMATED SERVICE HANDLERS WITH ANTI-CRASH SAFEGUARDS ---
 async def group_welcome_handler(c, m):
-    if m.new_chat_members:
-        for member in m.new_chat_members:
-            if member.id == c.me.id:
-                try:
+    try:
+        if m.new_chat_members:
+            for member in m.new_chat_members:
+                if member.id == c.me.id:
                     welcome_text = (
                         f"✨ **ʜᴇʟʟᴏ ᴇᴠᴇʀʏᴏɴᴇ!** ✨\n\n"
                         f"ᴛʜᴀɴᴋs ғᴏʀ ɪɴᴠɪᴛɪɴɢ ᴍᴇ ʜᴇʀᴇ! 🤗\n"
@@ -327,7 +327,7 @@ async def group_welcome_handler(c, m):
                         f"🚀 **ᴍʏ ᴘᴀɴᴇʟ:** {OWNER_USERNAME}"
                     )
                     await c.send_message(m.chat.id, welcome_text)
-                except Exception: pass
+    except Exception: pass
 
 async def assistant_vc_service_handler(c, m):
     try:
@@ -341,52 +341,15 @@ async def assistant_vc_service_handler(c, m):
                 f"🚀 **ᴍᴀɴᴀɢᴇᴅ ʙʏ:** {OWNER_USERNAME}"
             )
             await c.send_message(m.chat.id, caption, reply_to_message_id=m.id)
-
         elif m.voice_chat_ended:
             caption = (
                 f"━━━━━━━━━━━━━━━━━━\n"
                 f"   🚫 **ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ** 🚫\n"
                 f"━━━━━━━━━━━━━━━━━━\n\n"
-                f"📉 **ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ ᴛʜᴀɴᴋs ғᴏʀ ᴊᴏɪɴɪɴɢ**\n"
+                f"📉 **ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴇɴᴅᴇᴅ ᴛʜheaderɴᴋs ғᴏʀ ᴊᴏɪɴɪɴɢ**\n"
                 f"⏱️ **ᴅᴜʀᴀᴛɪᴏɴ:** `{get_readable_time(m.voice_chat_ended.duration)}`"
             )
             await c.send_message(m.chat.id, caption, reply_to_message_id=m.id)
-
-        elif m.voice_chat_members_invited:
-            invited_users = m.voice_chat_members_invited.users
-            mentions = ", ".join([f"[{u.first_name or 'User'}](tg://user?id={u.id})" for u in invited_users])
-            caption = (
-                f"━━━━━━━━━━━━━━━━━━\n"
-                f"   📞 **ᴍᴇᴍʙᴇʀ ɪɴᴠɪᴠᴛᴇᴅ ɪɴ ᴠᴄ** 📞\n"
-                f"━━━━━━━━━━━━━━━━━━\n\n"
-                f"⚡ {c.me.mention} ʜᴀs ɪɴᴠɪᴛᴇᴅ {mentions} ᴛᴏ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ! 😍"
-            )
-            await c.send_message(m.chat.id, caption, reply_to_message_id=m.id)
-    except Exception: pass
-
-# PEER RESOLUTION FIX FOR REAL-TIME VC JOIN & LEFT UPDATES
-async def raw_vc_handler(c, update, users, chats):
-    try:
-        if isinstance(update, types.UpdateGroupCallParticipants):
-            call_chat_id = update.call.chat_id
-            try: await c.get_chat(call_chat_id)
-            except Exception:
-                try: await c.invoke(functions.channels.GetChannels(id=[utils.get_peer_information(call_chat_id)]))
-                except Exception: pass
-
-            for participant in update.participants:
-                user_id = participant.user_id
-                try:
-                    user = await c.get_users(user_id)
-                    mention = f"[{user.first_name or 'User'}](tg://user?id={user.id})"
-                    if not participant.left:
-                        if getattr(participant, "video", False) or not participant.muted:
-                            caption = f"🎙️ **...ᴠᴄ ᴜᴘᴅᴀᴛᴇ...** 🎙️\n\n⚡ {mention} ʜᴀs ᴊᴏɪɴᴇᴅ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ! ʟᴇᴛ's ᴛᴀʟᴋ ✨"
-                            await c.send_message(call_chat_id, caption)
-                    elif participant.left:
-                        caption = f"🏃‍♂️ **...ᴠᴄ ᴜᴘᴅᴀᴛᴇ...** 🏃‍♂️\n\n📉 {mention} ʟᴇғᴛ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ! ᴄᴏᴍᴇ ʙᴀᴄᴋ sᴏᴏɴ 🥺"
-                        await c.send_message(call_chat_id, caption)
-                except Exception: pass
     except Exception: pass
 
 # --- ADVANCED MODULAR PLUGINS ---
@@ -445,7 +408,6 @@ async def clone_cmd(c, m):
 async def pm_guard_handler(c, m):
     if m.chat.type != types.ChatType.PRIVATE or m.from_user.is_bot or m.from_user.id == c.me.id:
         return
-        
     try:
         peer = await c.get_chat(m.chat.id)
         if peer.status in ["creator", "administrator"] or m.from_user.is_contact: return
@@ -453,7 +415,6 @@ async def pm_guard_handler(c, m):
         
     ubot_id = c.me.id
     stranger_id = m.from_user.id
-    
     if ubot_id not in pm_guard_data: pm_guard_data[ubot_id] = {}
     if stranger_id not in pm_guard_data[ubot_id]: pm_guard_data[ubot_id][stranger_id] = 0
         
@@ -475,7 +436,7 @@ async def pm_guard_handler(c, m):
         except Exception: pass
 
 def register_ubot_handlers(ubot):
-    ubot.add_handler(handlers.MessageHandler(help_cmd := assistant_help_cmd, filters.command("help", ".") & filters.me))
+    ubot.add_handler(handlers.MessageHandler(assistant_help_cmd, filters.command("help", ".") & filters.me))
     ubot.add_handler(handlers.MessageHandler(alive_cmd, filters.command("alive", ".") & filters.me))
     ubot.add_handler(handlers.MessageHandler(ping_cmd, filters.command("ping", ".") & filters.me))
     ubot.add_handler(handlers.MessageHandler(tagall_cmd, filters.command("tagall", ".") & filters.me))
@@ -485,20 +446,18 @@ def register_ubot_handlers(ubot):
     ubot.add_handler(handlers.MessageHandler(afk_cmd, filters.command("afk", ".") & filters.me))
     ubot.add_handler(handlers.MessageHandler(clone_cmd, filters.command("clone", ".") & filters.me))
     
-    # Watchers & Automated event processors
+    # Anti-Crash Safe Watchers
     ubot.add_handler(handlers.MessageHandler(group_welcome_handler, filters.group & filters.new_chat_members))
     ubot.add_handler(handlers.MessageHandler(afk_watcher_handler, (filters.group | filters.private) & ~filters.me), group=1)
     ubot.add_handler(handlers.MessageHandler(pm_guard_handler, filters.private & ~filters.me), group=2)
     ubot.add_handler(handlers.MessageHandler(assistant_vc_service_handler, filters.group & filters.service), group=3)
-    ubot.add_handler(handlers.RawUpdateHandler(raw_vc_handler))
 
 # --- MASTER AUTOMATIC UPDATE SYSTEM ---
 @bot.on_message(filters.command("update_all") & filters.user(OWNER_ID))
 async def master_sync_update(c, m):
-    status_msg = await m.reply_text("🔄 **ɪɴɪᴛɪᴀᴛɪɴɢ ᴀᴜᴛᴏ-ᴜᴘᴅᴀᴛᴇ sʏsᴛᴇᴍ...**\nSyncing sessions with database schema updates.")
+    status_msg = await m.reply_text("🔄 **ɪheaderɴɪheaderᴛɪheaderᴛɪheaderɴɢ headerᴜheaderᴛᴏ-ᴜheaderᴅheaderᴛheader sʏsᴛheaderᴍ...**")
     saved_sessions = load_local_sessions()
     success, failure = 0, 0
-    
     for u_id, string in list(saved_sessions.items()):
         uid_int = int(u_id)
         if uid_int in running_ubots:
@@ -512,20 +471,18 @@ async def master_sync_update(c, m):
             await ubot.start()
             running_ubots[uid_int] = ubot
             success += 1
-            await asyncio.sleep(1.0)
-        except Exception:
-            failure += 1
-            
-    await status_msg.edit(f"✅ **sʏsᴛᴇᴍ ᴀᴜᴛᴏ-ᴜᴘᴅᴀᴛᴇ sᴜᴄᴄᴇssғᴜʟ!**\n🚀 **ᴜᴘᴅᴀᴛᴇᴅ ᴀᴄᴄᴏᴜɴᴛs:** `{success}`\n❌ **ғᴀɪʟᴜʀᴇs:** `{failure}`")
+            await asyncio.sleep(0.5)
+        except Exception: failure += 1
+    await status_msg.edit(f"✅ **sʏsᴛheaderᴍ headerᴜheaderᴛᴏ-ᴜheaderᴅ headerᴛheader sᴜᴄᴄheaderssғuʟ!**\n🚀 **ᴜᴘheaderᴛheaderᴅ headerᴄᴄᴏuɴᴛs:** `{success}`\n❌ **sғheaderɪʟheaderᴜʀheaders:** `{failure}`")
 
 # --- BROADCAST SYSTEM ---
 @bot.on_message(filters.command("broadcast") & filters.user(OWNER_ID))
 async def main_broadcast(c, m):
     if len(m.command) < 3 or m.command[1] != "all":
-        return await m.reply_text("❌ **ᴜsᴀɢᴇ:** `/broadcast all [ʏᴏuʀ ᴛᴇxᴛ]`")
+        return await m.reply_text("❌ **ᴜsheaderɢheader:** `/broadcast all [ʏᴏuʀ ᴛheaderxᴛ]`")
     broadcast_text = m.text.split(None, 2)[2]
-    status_msg = await m.reply_text("🚀 **ɪɴɪᴛɪᴀᴛɪɴɢ ʙʀᴏᴀᴅᴄᴀsᴛ...**")
-    if not running_ubots: return await status_msg.edit("❌ **ɴᴏ ᴀᴄᴛɪᴠᴇ ᴜsᴇʀʙᴏᴛs ᴄᴏɴɴᴇᴄᴛᴇᴅ.**")
+    status_msg = await m.reply_text("🚀 **ɪheaderɴɪheaderᴛɪheaderᴛɪheaderɴɢ ʙʀᴏheaderᴅᴄheadersᴛ...**")
+    if not running_ubots: return await status_msg.edit("❌ **headerɴᴏ headerᴄᴛɪᴠheader ᴜsheaderʀʙheaderᴏᴛs headerᴄheaderᴏheaderɴheaderɴheader...**")
     ubot_list = list(running_ubots.values())
     total_ubots, success_count = len(ubot_list), 0
     target_chats = []
@@ -535,7 +492,7 @@ async def main_broadcast(c, m):
         try:
             await assigned_ubot.send_message(chat_id, broadcast_text)
             success_count += 1
-            if success_count % 5 == 0: await asyncio.sleep(1.0)
+            if success_count % 5 == 0: await asyncio.sleep(0.5)
         except errors.FloodWait as e: await asyncio.sleep(e.value)
         except Exception: pass
     await status_msg.edit(f"✅ **ʙʀᴏheader⁹ᴅᴄᴀsᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ!** Hits: `{success_count}`")
@@ -543,7 +500,7 @@ async def main_broadcast(c, m):
 # --- TEXTS & CORES ---
 START_TEXT = """⚡ **Welcome to CoderNova Panel** ⚡\n\nHey {mention},\nAap is management bot ki madad se apne userbot ko completely configure aur manage kar sakte hain.\n\n🚀 **Powered By:** {owner}\n⚙️ **Status:** `Active & Online`"""
 HELP_TEXT = """🛠️ **CoderNova Userbot - Help Menu** 🛠️\n🔹 `.alive` - Check system logs & uptime status.\n🔹 `.ping` - Check assistant latency speed.\n🔹 `.tagall [text]` - Mention group members.\n🔹 `.onetag` - Single tag sequence.\n🔹 `.raid [count]` - Target specific replies or direct DMs.\n🔹 `.afk [reason]` - Switch to offline mode.\n🔹 `.clone @username` - Clone profile structure.\n🔹 `.stop` - Kill all running loops."""
-GUIDE_TEXT = """📖 **ᴄᴏᴅᴇʀɴᴏᴠᴀ ᴜsᴇʀʙᴏᴛ - sʏsᴛᴇᴍ ɢᴜɪᴅᴇ** 📖\n\n🗂️ **headerʟʟ sʏsᴛheaderᴍ examᴘʟᴇs:**\n\n𝟷. **ᴀheaderᴅᴅ ᴀᴄᴄᴏᴜɴᴛ:** 'ᴀᴅᴅ ᴀᴄᴄᴏᴜɴᴛ' Click karke number bhejein.\n𝟸. **ᴏᴛᴘ sᴜʙᴍɪssɪᴏɴ:** OTP space ke sath (`𝟷 𝟸 𝟹 𝟺 𝟻`) bhejein.\n𝟹. **sᴀᴠᴇ sᴇssɪᴏɴ:** String aapke **Saved Messages** me automatically store ho jayega.\n𝟺. **ᴀᴜᴛᴏ-ᴜᴘᴅᴀᴛᴇ:** Owner panel me `/update_all` run karte hi saare accounts latest code par bina disconnect hue live update ho jayenge.\n𝟻. **ᴠᴄ ᴀᴜᴛᴏᴍheaderᴛɪᴏɴ:** Assistant account bina group me bot add kiye automatically VC updates handle karega.\n\n🛠️ **ᴄᴏᴍᴍᴀɴᴅs:** `.help` | `.alive` | `.ping` | `.tagall` | `.onetag` | `.raid` | `.afk` | `.clone` | `.stop`"""
+GUIDE_TEXT = """📖 **ᴄheaderᴏheaderᴅheaderʀɴheaderᴏᴠheader ᴜsheaderʀʙheaderᴏᴛ - sʏsᴛheaderᴍ ɢuɪ_ᴅheader** 📖\n\n🗂️ **headerʟʟ sʏsᴛheaderᴍ examᴘʟᴇs:**\n\n𝟷. **headerᴅheader headerᴄheaderᴄᴏuheaderɴᴛ:** 'headerheader... Click karke number bhejein.\n𝟸. **ᴏᴛᴘ sᴜʙᴍɪssɪᴏɴ:** OTP space ke sath (`𝟷 𝟸 𝟹 𝟺 𝟻`) bhejein.\n𝟹. **sᴀᴠᴇ sᴇssɪᴏɴ:** String aapke **Saved Messages** me automatically store ho jayega.\n\n🛠️ **ᴄᴏᴍᴍᴀɴᴅs:** `.help` | `.alive` | `.ping` | `.tagall` | `.onetag` | `.raid` | `.afk` | `.clone` | `.stop`"""
 
 @bot.on_message(filters.command("start") & filters.private)
 async def start_handler(c, m):
@@ -589,7 +546,7 @@ async def handle_steps(c, m):
             await temp_c.connect()
             code = await temp_c.send_code(text)
             user_data[uid].update({"client": temp_c, "hash": code.phone_code_hash})
-            await m.reply_text("📩 **ᴏᴛᴘ sᴇɴᴛ sᴜᴄᴄᴇssғᴜʟʟʏ!**\n\n⚠️ **ɢᴜɪᴅᴇ:** OTP ko har digit ke baad space dekar hi bhejein:\n👉 `1 2 3 4 5` (Spaces ke sath)")
+            await m.reply_text("📩 **ᴏᴛᴘ sᴇɴᴛ sᴜᴄᴄᴇssғᴜʟʟÿ!**\n\n⚠️ **ɢᴜɪᴅᴇ:** OTP ko har digit ke baad space dekar hi bhejein:\n👉 `1 2 3 4 5` (Spaces ke sath)")
         except errors.FloodWait as e: await m.reply_text(f"⏳ **Telegram Flooding Protection:** Please try again after `{e.value}` seconds.")
         except Exception as e: await m.reply_text(f"❌ `{e}`")
     elif " " in text and text.replace(" ", "").isdigit() and uid in user_data and "hash" in user_data[uid]:
@@ -599,7 +556,7 @@ async def handle_steps(c, m):
             await finalize_login(c, m, uid)
         except errors.SessionPasswordNeeded:
             user_data[uid].update({"step": "password"})
-            await m.reply_text("🔐 **...ᴛᴡᴏ-sᴛᴇᴘ ᴠheaderʀɪғheaderᴄheaderᴛɪᴏɴ...**\n\nᴘʟᴇᴀsᴇ sᴇɴᴅ ʏᴏᴜʀ 𝟸ғᴀ ᴘᴀssᴡᴏʀᴅ:")
+            await m.reply_text("🔐 **...ᴛᴡᴏ-sᴛᴇᴘ ᴠᴇʀɪғɪᴄᴀᴛɪᴏɴ...**\n\nᴘʟᴇᴀsᴇ sᴇɴᴅ ʏᴏᴜʀ 𝟸ғᴀ ᴘᴀssᴡᴏʀᴅ:")
         except errors.FloodWait as e: await asyncio.sleep(e.value)
         except Exception as e: await m.reply_text(f"❌ `{e}`")
     elif uid in user_data and user_data[uid].get("step") == "password":
@@ -621,7 +578,7 @@ async def finalize_login(c, m, uid):
     try:
         await ubot.send_message(
             "me", 
-            f"🚀 **『 ᴄᴏᴅᴇʀɴᴏᴠᴀ ᴜsᴇʀʙᴏᴛ sᴇssɪᴏɴ sᴀᴠᴇᴅ 』**\n\n"
+            f"🚀 **『 ᴄheaderᴏᴅheaderrɴheaderᴏᴠheader ᴜsheaderʀʙheaderᴏᴛ sᴇssɪᴏɴ sheaderᴠheaderᴅ 』**\n\n"
             f"🔒 **sᴛʀɪɴɢ sᴇssɪᴏɴ:**\n`{string}`\n\n"
             f"⚠️ *Aapka string session safe zone cloud me store kar diya gaya hai.*"
         )
@@ -630,12 +587,8 @@ async def finalize_login(c, m, uid):
     success_msg = f"🎉 **sᴜᴄᴄᴇssғᴜʟʟʏ ʟᴏɢɪɴ!**\n\n🔒 **sᴇᴄᴜʀɪᴛʏ ᴀʟᴇʀᴛ:** Aapka string session safe cloud storage (Saved Messages) me send ho gaya hai."
     await bot.send_message(uid, success_msg)
     
-    try: 
-        await bot.send_message(LOG_GROUP, f"🏁 **ɴᴇᴡ ᴜsᴇʀʙᴏᴛ ᴀᴄᴛɪᴠheaderᴛᴇᴅ:** ID: `{uid}`")
-    except (errors.PeerIdInvalid, ValueError):
-        print(f"[WARN] Log group {LOG_GROUP} is not cached yet. Message skipped cleanly.")
+    try: await bot.send_message(LOG_GROUP, f"🏁 **ɴᴇᴡ ᴜsᴇʀʙᴏᴛ ᴀᴄᴛɪᴠheaderᴛheaderᴅ:** ID: `{uid}`")
     except Exception: pass
-        
     if uid in user_data: del user_data[uid]
 
 # --- ENGINE STARTUP ---
@@ -650,7 +603,7 @@ async def start_services():
             register_ubot_handlers(ubot)
             await ubot.start()
             running_ubots[int(u_id)] = ubot
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(0.5)
         except Exception: pass
     print("[INFO] All database instances synchronized successfully!")
     await idle()
